@@ -5,6 +5,7 @@ import Hero from './components/Hero.jsx';
 import Stats from './components/Stats.jsx';
 import ProgramCard from './components/ProgramCard.jsx';
 import Contact from './components/Contact.jsx';
+import CampusLife from "./components/CampusLife.jsx";
 
 function App() {
     const [programs, setPrograms] = useState([]);
@@ -32,7 +33,7 @@ function App() {
                     ))}
                 </div>
             </section>
-
+            <CampusLife/>
             <Contact />
         </div>
     );
