@@ -3,6 +3,9 @@ import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import axios from 'axios';
 
+// Dùng import.meta.env để tự động đổi link tùy theo môi trường
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+
 const useChatStore = create((set, get) => ({
   messages: [],
   isConnected: false,
@@ -11,7 +14,8 @@ const useChatStore = create((set, get) => ({
   // 1. Lấy lịch sử chat bằng HTTP (Axios)
   fetchHistory: async (roomId) => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/chat/history/${roomId}`);
+      // Cho HTTP (Axios)
+      const response = await axios.get(`${API_URL}/api/chat/history/${roomId}`);
       set({ messages: response.data });
     } catch (error) {
       console.error("Lỗi tải lịch sử:", error);
@@ -26,13 +30,15 @@ const useChatStore = create((set, get) => ({
     }
 
     // Dùng SockJS để tương thích với cấu hình .withSockJS() của Spring Boot
-    const socket = new SockJS('http://localhost:8080/ws'); 
+    // Cho WebSocket (SockJS)
+    // Nhớ bỏ 'http://' nếu dùng wss:// hoặc để SockJS tự xử lý với đường link full
+    const socket = new SockJS(`${API_URL}/ws`);
     const client = new Client({
       webSocketFactory: () => socket,
       debug: (str) => console.log(str),
       onConnect: () => {
         set({ isConnected: true });
-        
+
         // Theo dõi (Subscribe) phòng chat
         client.subscribe(`/topic/room/${roomId}`, (messageOutput) => {
           const newMessage = JSON.parse(messageOutput.body);
@@ -48,7 +54,7 @@ const useChatStore = create((set, get) => ({
         set({ isConnected: false });
       }
     });
-    
+
     set({ stompClient: client }); // Gán ngay client vào state để khi unmount có thể deactivate kịp thời
     client.activate(); // Bắt đầu kết nối
   },
