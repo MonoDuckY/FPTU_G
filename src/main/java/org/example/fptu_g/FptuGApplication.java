@@ -9,5 +9,4 @@ public class FptuGApplication {
     public static void main(String[] args) {
         SpringApplication.run(FptuGApplication.class, args);
     }
-
 }
