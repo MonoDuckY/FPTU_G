@@ -42,4 +42,48 @@ spring.datasource.password=mật_khẩu_mysql_của_bạn
 
 ---
 
+## 💻 Chạy bằng Terminal (không cần IntelliJ)
+
+### 1) Chạy Backend bằng terminal
+Tại thư mục gốc dự án:
+
+```powershell
+# PowerShell (Windows)
+$env:DB_URL="jdbc:mysql://<AIVEN_HOST>:<AIVEN_PORT>/fptu_g_db?sslMode=REQUIRED"
+$env:DB_USERNAME="avnadmin"
+$env:DB_PASSWORD="<password>"
+.\gradlew.bat bootRun
+```
+
+```bash
+# macOS/Linux
+export DB_URL="jdbc:mysql://<AIVEN_HOST>:<AIVEN_PORT>/fptu_g_db?sslMode=REQUIRED"
+export DB_USERNAME="<AIVEN_USERNAME>"
+export DB_PASSWORD="<AIVEN_PASSWORD>"
+./gradlew bootRun
+```
+
+Sau khi chạy thành công, backend sẽ mở ở `http://localhost:8080`.
+
+### 2) Chạy Frontend bằng terminal
+Mở terminal khác, di chuyển vào thư mục `frontend`:
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend sẽ chạy ở `http://localhost:5173`.
+
+### 3) Test nhanh API backend
+
+```powershell
+Invoke-RestMethod "http://localhost:8080/api/programs" | ConvertTo-Json -Depth 10
+```
+
+Nếu có dữ liệu JSON trả về thì backend đã kết nối database thành công.
+
+---
+
 ## Gudluck <3
